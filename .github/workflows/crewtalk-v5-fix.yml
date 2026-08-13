@@ -1,0 +1,47 @@
+name: Patch CrewTalk Today V5
+on:
+  push:
+    branches: [crewtalk-preview]
+    paths:
+      - '.github/workflows/crewtalk-v5-fix.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: crewtalk-preview
+      - name: Patch direct preview
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const p='crewtalk-preview/direct.html';
+          let s=fs.readFileSync(p,'utf8');
+          const css='.sendTasksArea{display:grid;gap:6px;margin-top:13px;padding-top:13px;border-top:1px solid #edf1ee}.sendTasksBtn{width:100%;min-height:48px;font-size:13px}.sendTasksArea small{text-align:center;color:var(--mut);font-size:9px}\n';
+          if(!s.includes('.sendTasksArea{')) s=s.replace('</style>',css+'</style>');
+          const old='<div class="workerGridV3" id="recipients"></div></section>';
+          const neu='<div class="workerGridV3" id="recipients"></div><div class="sendTasksArea"><button class="primary sendTasksBtn" id="sendTasksBtn" onclick="startSendFlow()">📤 שלח משימות</button><small>לפני השליחה תוצג בדיקת המשימה, התרגום ו־SafeTranslate.</small></div></section>';
+          if(!s.includes('id="sendTasksBtn"')) {
+            if(!s.includes(old)) throw new Error('recipient marker missing');
+            s=s.replace(old,neu);
+          }
+          if(!s.includes('function setTeam(')) {
+            const marker='function renderTeamTabs(){';
+            if(!s.includes(marker)) throw new Error('team renderer missing');
+            s=s.replace(marker,"function setTeam(team){currentTeam=String(team);renderRecipients();requestAnimationFrame(()=>document.querySelector('#teamTabs .on')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}))}\nfunction startSendFlow(){analyzeInstruction()}\n"+marker);
+          } else if(!s.includes('function startSendFlow(')) {
+            s=s.replace('function renderTeamTabs(){','function startSendFlow(){analyzeInstruction()}\nfunction renderTeamTabs(){');
+          }
+          if(!s.includes('id="sendTasksBtn"')||!s.includes('function setTeam(')||!s.includes('function startSendFlow(')) throw new Error('patch verification failed');
+          fs.writeFileSync(p,s);
+          fs.copyFileSync(p,'crewtalk-preview/index.html');
+          NODE
+      - name: Commit patched preview
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add crewtalk-preview/direct.html crewtalk-preview/index.html
+          git diff --cached --quiet || git commit -m 'Fix CrewTalk team filter and add send tasks button'
+          git push
