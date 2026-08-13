@@ -48,10 +48,12 @@ jobs:
           if old_end in s:
               s=s.replace(old_end,new_end)
           p.write_text(s)
-          data=p.read_bytes()
-          sha=hashlib.sha256(data).hexdigest()
-          assert len(data)==56228, (len(data),sha)
-          assert sha=='476f799d4df3951ea4b0e931f72f8ebef7618944e54de3a6fd0c13b8d77b74e0', sha
+          Path('crewtalk-preview/index.html').write_text(s)
+          for path in ['crewtalk-preview/direct.html','crewtalk-preview/index.html']:
+              data=Path(path).read_bytes()
+              sha=hashlib.sha256(data).hexdigest()
+              assert len(data)==56228, (path,len(data),sha)
+              assert sha=='476f799d4df3951ea4b0e931f72f8ebef7618944e54de3a6fd0c13b8d77b74e0', (path,sha)
           PY
       - name: Validate JavaScript
         run: |
@@ -67,7 +69,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add crewtalk-preview/direct.html
-          git diff --cached --quiet || git commit -m 'CrewTalk Today V5: teams + send tasks'
+          git add crewtalk-preview/direct.html crewtalk-preview/index.html
+          git diff --cached --quiet || git commit -m 'Sync CrewTalk Today V5 preview'
           git pull --rebase origin crewtalk-preview
           git push origin crewtalk-preview
