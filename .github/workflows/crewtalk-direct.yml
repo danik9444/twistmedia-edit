@@ -3,7 +3,6 @@ on:
   push:
     branches: [crewtalk-preview]
     paths:
-      - 'crewtalk-preview/index.html'
       - '.github/workflows/crewtalk-direct.yml'
 permissions:
   contents: write
@@ -14,25 +13,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: crewtalk-preview
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Expand preview wrapper
+      - name: Build exact direct HTML
         run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          const zlib = require('zlib');
-          const src = fs.readFileSync('crewtalk-preview/index.html','utf8');
-          const m = src.match(/H4sI[A-Za-z0-9+/=]+/);
-          if (!m) throw new Error('gzip bundle not found');
-          const html = zlib.gunzipSync(Buffer.from(m[0], 'base64')).toString('utf8');
-          if (!html.includes('<title>CrewTalk')) throw new Error('unexpected preview');
-          fs.writeFileSync('crewtalk-preview/direct.html', html);
-          NODE
-      - name: Commit direct HTML
+          printf '%s\n' .crewtalk-build/part*.b64 | sort -V | xargs cat > /tmp/crewtalk.b64
+          base64 -d /tmp/crewtalk.b64 > crewtalk-preview/direct.html
+          echo "2214054904ef4af8d0e3f5d9560bd09341eaac9c3a2d4c77a3299890f6f1589d  crewtalk-preview/direct.html" | sha256sum -c -
+          test "$(wc -c < crewtalk-preview/direct.html)" = "55213"
+      - name: Commit verified direct HTML
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add crewtalk-preview/direct.html
-          git diff --cached --quiet || git commit -m 'Build CrewTalk direct preview'
+          git diff --cached --quiet || git commit -m 'Build verified CrewTalk direct preview'
           git push
