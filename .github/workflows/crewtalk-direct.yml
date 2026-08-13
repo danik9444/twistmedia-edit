@@ -23,9 +23,9 @@ jobs:
           const fs = require('fs');
           const zlib = require('zlib');
           const src = fs.readFileSync('crewtalk-preview/index.html','utf8');
-          const m = src.match(/const s="([^"]+)"/);
-          if (!m) throw new Error('bundle not found');
-          const html = zlib.gunzipSync(Buffer.from(m[1], 'base64')).toString('utf8');
+          const m = src.match(/H4sI[A-Za-z0-9+/=]+/);
+          if (!m) throw new Error('gzip bundle not found');
+          const html = zlib.gunzipSync(Buffer.from(m[0], 'base64')).toString('utf8');
           if (!html.includes('<title>CrewTalk')) throw new Error('unexpected preview');
           fs.writeFileSync('crewtalk-preview/direct.html', html);
           NODE
