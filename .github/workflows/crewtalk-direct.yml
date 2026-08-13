@@ -30,9 +30,11 @@ jobs:
           if 'id="sendTasksBtn"' not in s:
               s=s.replace(old,new)
           vis="function visibleRecipients(){const list=projectWorkers();if(currentTeam==='all')return list;if(currentTeam==='none')return list.filter(w=>!w.team);return list.filter(w=>String(w.team)===String(currentTeam))}\n"
-          funcs=vis+"function setTeam(team){currentTeam=String(team);renderRecipients();requestAnimationFrame(()=>document.querySelector('#teamTabs .on')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}))}\nfunction startSendFlow(){analyzeInstruction()}\nfunction updateSendTasksState(){const b=$('sendTasksBtn');if(!b)return;const ready=selected.size>0&&!!$('instruction').value.trim();b.disabled=!ready;b.setAttribute('aria-disabled',String(!ready))}\n"
           if 'function setTeam(team)' not in s:
-              s=s.replace(vis,funcs)
+              s=s.replace(vis,vis+"function setTeam(team){currentTeam=String(team);renderRecipients();requestAnimationFrame(()=>document.querySelector('#teamTabs .on')?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}))}\nfunction startSendFlow(){analyzeInstruction()}\n")
+          if 'function updateSendTasksState()' not in s:
+              marker="function startSendFlow(){analyzeInstruction()}\n"
+              s=s.replace(marker,marker+"function updateSendTasksState(){const b=$('sendTasksBtn');if(!b)return;const ready=selected.size>0&&!!$('instruction').value.trim();b.disabled=!ready;b.setAttribute('aria-disabled',String(!ready))}\n")
           old_tail="$('allBtn').textContent=allSelected?'נקה את הצוות':'בחר את כל הצוות'}"
           new_tail="$('allBtn').textContent=allSelected?'נקה את הצוות':'בחר את כל הצוות';updateSendTasksState()}"
           if old_tail in s:
@@ -50,8 +52,6 @@ jobs:
           sha=hashlib.sha256(data).hexdigest()
           assert len(data)==56228, (len(data),sha)
           assert sha=='476f799d4df3951ea4b0e931f72f8ebef7618944e54de3a6fd0c13b8d77b74e0', sha
-          assert 'function setTeam(team)' in s
-          assert 'id="sendTasksBtn"' in s
           PY
       - name: Validate JavaScript
         run: |
@@ -69,4 +69,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add crewtalk-preview/direct.html
           git diff --cached --quiet || git commit -m 'CrewTalk Today V5: teams + send tasks'
-          git push
+          git pull --rebase origin crewtalk-preview
+          git push origin crewtalk-preview
