@@ -1,0 +1,17 @@
+.status.problem{background:#fde9e7;color:#9d3e37}
+.status.completed{background:#e7f6ed;color:#217049}
+.editBtn{width:100%;margin-top:7px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px;font-size:9px;font-weight:900}
+.modalBack{display:none;position:fixed;inset:0;background:#0d251b8a;z-index:200;align-items:flex-start;justify-content:center;padding:4vh 12px 12px;backdrop-filter:blur(4px)}
+.modalBack.on{display:flex}
+.modal{width:min(760px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 25px 80px #0005}
+.modalHead{position:sticky;top:0;z-index:5;background:#ffffffee;backdrop-filter:blur(12px);display:flex;justify-content:space-between;align-items:center;padding:15px 17px;border-bottom:1px solid #edf1ef}
+.modalHead h3{font-size:17px;margin:0}
+.close{width:39px;height:39px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.editor{padding:14px 16px 0;display:grid;gap:12px}
+.intro{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.intro b,.intro small{display:block}
+.intro b{font-size:13px}
+.intro small{font-size:9.5px;color:var(--mut);margin-top:3px}
+.legend{display:flex;gap:5px;flex-wrap:wrap}
+.legend span{border:1px solid var(--line);background:#f7f9f8;border-radius:999px;padding:4px 6px;font-size:8px}
+.preview{background:#fffaf0;border:1px solid #eee1b8;border-radius:9px;padding:8px 9px}

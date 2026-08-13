@@ -1,0 +1,19 @@
+.summary span{min-width:64px;border:1px solid var(--line);background:#f5f7f6;border-radius:9px;padding:6px 7px;text-align:center;font-size:8px;color:var(--mut)}
+.summary b{display:block;font-size:14px;color:var(--ink)}
+.toolbar{display:grid;grid-template-columns:1fr 160px;gap:7px;margin:13px 0}
+.toolbar input,.toolbar select{border:1px solid var(--line);border-radius:9px;background:#fff;padding:9px;min-height:42px}
+.taskList{display:grid;gap:8px}
+.taskCard{border:1px solid var(--line);border-radius:12px;padding:11px;display:flex;justify-content:space-between;gap:12px}
+.taskMain{min-width:0;flex:1}
+.taskTitle{display:flex;justify-content:space-between;gap:8px}
+.taskTitle>b{font-size:12px}
+.badges{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.badge{font-size:8px;border-radius:999px;background:#f2f5f3;border:1px solid var(--line);padding:4px 6px}
+.badge.warn{background:#fff6df;border-color:#ecd7a1;color:#795a13}
+.badge.un{background:#fff0ef;border-color:#eccbc8;color:#9b4039}
+.taskCard small{color:var(--mut);font-size:9px}
+.taskCard p{font-size:11px;line-height:1.55;margin:6px 0}
+.assignees{display:flex;gap:4px;flex-wrap:wrap}
+.assignees span{background:#f1f5f2;border-radius:999px;padding:4px 6px;font-size:8.5px}
+.taskSide{text-align:left;min-width:104px}
+.status{display:inline-block;background:#eef2ef;border-radius:999px;padding:5px 7px;font-size:8.5px;font-weight:900}

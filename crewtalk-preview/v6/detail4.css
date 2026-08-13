@@ -1,0 +1,14 @@
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:800}
+.chips button.on{background:#e9f7ef;border-color:#75a98e;color:var(--g)}
+.addTask{border:1.5px dashed #9fc0ae;background:#f5fbf7;color:var(--g);border-radius:10px;min-height:42px;font-weight:900}
+.modalFoot{position:sticky;bottom:0;background:linear-gradient(transparent,#fff 18%);padding:20px 0 calc(12px + env(safe-area-inset-bottom));display:flex;justify-content:space-between;gap:7px}
+.secondary{border:1px solid var(--line);background:#fff;border-radius:9px;min-height:44px;padding:9px 12px;font-weight:800}
+.modalFoot .primary{flex:1}
+.editForm{padding:14px 16px calc(16px + env(safe-area-inset-bottom));display:grid;gap:10px}
+.editForm label{display:grid;gap:4px;font-size:9px;font-weight:900}
+.editForm input,.editForm textarea,.editForm select{border:1px solid #ced9d3;border-radius:8px;padding:9px;background:#fff}
+.editForm textarea{min-height:100px;resize:vertical}
+.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mobileNav{display:none}
+.placeholder{padding:35px;text-align:center;color:var(--mut)}

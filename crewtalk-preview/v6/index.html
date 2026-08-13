@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CrewTalk — Today V6</title>
+<link rel="stylesheet" href="base1.css">
+<link rel="stylesheet" href="base2.css">
+<link rel="stylesheet" href="detail1.css">
+<link rel="stylesheet" href="detail2.css">
+<link rel="stylesheet" href="detail3a.css">
+<link rel="stylesheet" href="detail3b.css">
+<link rel="stylesheet" href="detail4.css">
+<link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+<div class="app"><aside class="side"><div class="brand"><div class="brandIcon">🌐</div><div><b>CrewTalk</b><small>אתה מדבר. כולם מבינים.</small></div></div><nav><button class="on" data-view="today">✨ היום</button><button data-view="communication">💬 תקשורת</button><button data-view="tasks">✅ משימות</button><button data-view="workers">👷 עובדים</button><button data-view="projects">🏗️ פרויקטים</button><button data-view="teams">🧱 צוותים</button></nav><div class="siteBadge"><b>🏗️ מרינה אשקלון</b><small id="sideWorkers"></small></div></aside>
+<main class="main"><header class="top"><div><h1 id="title">בוקר טוב 👋</h1><p>ABC בנייה · מרינה אשקלון · מנהל</p></div><button class="desktopOnly" onclick="addWorker()">＋ עובד חדש</button></header>
+<section id="today" class="view on"><div class="stats"><div class="stat"><i>🧱</i><b id="statTeams">0</b><span>צוותים</span></div><div class="stat"><i>👷</i><b id="statWorkers">0</b><span>עובדים פעילים</span></div><div class="stat"><i>⚠️</i><b id="statAttention">1</b><span>דורש טיפול</span></div></div><div class="composer"><section class="taskInput"><label for="taskText">מה צריך לעשות?</label><div class="textBox"><textarea id="taskText" rows="3" placeholder="כתוב או הקלט כמה משימות ברצף…" oninput="autoSize();syncButtons()"></textarea><div class="micWrap"><span id="timer" class="timer" hidden>00:00</span><button id="mic" class="mic" aria-label="הקלט משימות" onclick="recordToggle()">🎙️</button></div></div><button id="analyzeBtn" class="primary analyze" onclick="analyzeTasks('review')">✨ נתח את המשימות</button></section><section class="picker"><div class="pickerTitle"><div><small>בחירת צוות</small><h2>למי המשימה?</h2></div><span class="selectedCount" id="selectedCount">0 נבחרו</span></div><div class="teamTabs" id="teamTabs"></div><div class="workerHead"><div><b id="teamLabel">כל הצוותים</b><small id="workerShown"></small></div><div class="workerActions"><button onclick="toggleAll()" id="selectAll">בחר את כל הצוות</button><button class="add" onclick="addWorker()">＋ עובד</button></div></div><div class="workers" id="workers"></div><div class="sendArea"><button id="sendBtn" class="primary" onclick="prepareSend()">📤 שלח משימות</button><small>ניתוח ושמירה לא דורשים עובד. שליחה דורשת שיוך עובד לכל משימה.</small></div></section></div></section>
+<section id="tasks" class="view"><div class="card"><div class="tasksHead"><div><small style="color:var(--g);font-weight:900">בקרה ועריכה</small><h2>משימות</h2><p>כל המשימות שאושרו נשמרות כאן וניתנות לעריכה מלאה.</p></div><div class="summary" id="summary"></div></div><div class="toolbar"><input id="taskSearch" type="search" placeholder="חפש משימה, עובד, מיקום או קוד…" oninput="renderTasks()"><select id="taskFilter" onchange="renderTasks()"><option value="open">פתוחות</option><option value="approved">אושרו</option><option value="in_progress">בביצוע</option><option value="problem">בעיות</option><option value="completed">הושלמו</option><option value="all">הכול</option></select></div><div class="taskList" id="taskList"></div></div></section>
+<section id="communication" class="view"><div class="card placeholder">💬 תקשורת דו־כיוונית עם העובדים ותרגום חזרה לעברית.</div></section><section id="workersPage" class="view"><div class="card placeholder">👷 ניהול עובדים, שפות, WhatsApp, פרויקטים וצוותים.</div></section><section id="projects" class="view"><div class="card placeholder">🏗️ ניהול פרויקטים ואתרי עבודה.</div></section><section id="teams" class="view"><div class="card placeholder">🧱 ניהול צוותי שטח.</div></section></main></div>
+<nav class="mobileNav"><button class="on" data-mobile="today" onclick="showView('today')">⌂<small>היום</small></button><button data-mobile="communication" onclick="showView('communication')">💬<small>תקשורת</small></button><button data-mobile="tasks" onclick="showView('tasks')">✓<small>משימות</small></button><button data-mobile="workers" onclick="showView('workers')">•••<small>עוד</small></button></nav>
+<div class="modalBack" id="analysisBack" onclick="if(event.target===this)closeAnalysis()"><div class="modal"><div class="modalHead"><h3 id="analysisTitle">בדיקת המשימות שנקלטו</h3><button class="close" onclick="closeAnalysis()">✕</button></div><div class="editor"><div class="intro"><div><b id="analysisCount"></b><small>אפשר לערוך, להוסיף, להסיר ולשנות סדר לפני האישור.</small></div><div class="legend"><span><mark>12</mark> מספר</span><span><mark>לא</mark> שלילה</span><span><mark>חשמל</mark> בטיחות</span></div></div><div class="editorTasks" id="editorTasks"></div><button class="addTask" onclick="addParsedTask()">＋ הוסף משימה</button><div class="modalFoot"><button class="secondary" onclick="closeAnalysis()">ביטול</button><button class="primary" onclick="approveParsed()" id="approveParsed">✓ אשר ושמור משימות</button></div></div></div></div>
+<div class="modalBack" id="editBack" onclick="if(event.target===this)closeEdit()"><div class="modal"><div class="modalHead"><h3>עריכת משימה</h3><button class="close" onclick="closeEdit()">✕</button></div><form class="editForm" onsubmit="saveEdit(event)"><label>כותרת<input id="editTitle" required></label><label>תיאור<textarea id="editDesc" required></textarea></label><div class="editGrid"><label>מיקום<input id="editLocation"></label><label>סטטוס<select id="editStatus"><option value="approved">אושרה</option><option value="in_progress">בביצוע</option><option value="problem">בעיה</option><option value="completed">הושלמה</option><option value="cancelled">בוטלה</option></select></label></div><div class="checks"><label><input type="checkbox" id="editSafety"> רגיש לבטיחות</label><label><input type="checkbox" id="editPhoto"> צילום בסיום</label></div><div class="assignBox"><b>עובדים משויכים</b><small>לחץ כדי להוסיף או להסיר עובד.</small><div class="chips" id="editAssignees"></div></div><div class="modalFoot"><button type="button" onclick="deleteTask()">🗑 מחק</button><button class="primary">✓ שמור שינויים</button></div></form></div></div>
+<div id="notice" class="notice" hidden></div>
+<script src="data.js"></script>
+<script src="nav.js"></script>
+<script src="recipients.js"></script>
+<script src="input.js"></script>
+<script src="parse.js"></script>
+<script src="editor-render.js"></script>
+<script src="editor-actions.js"></script>
+<script src="tasks-render.js"></script>
+<script src="tasks-edit.js"></script>
+<script src="init.js"></script>
+</body></html>
